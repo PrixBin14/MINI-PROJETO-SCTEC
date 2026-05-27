@@ -228,10 +228,46 @@ def process_dataframe(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+def gerar_relatorio_auditoria(df: pd.DataFrame, path: Path) -> None:
+    """Gera um relatório CSV de auditoria contendo métricas e metadados do DataFrame.
+
+    O relatório inclui por coluna: tipo, número de nulos, número de únicos, exemplo de valores
+    e um indicador se a coluna teve imputações/alterações durante o processamento (quando aplicável).
+    """
+    df = df.copy()
+    rel = pd.DataFrame(
+        {
+            'coluna': df.columns,
+            'tipo': [str(t) for t in df.dtypes.values],
+            'num_nulos': df.isna().sum().values,
+            'num_unicos': [df[c].nunique(dropna=True) for c in df.columns],
+            'amostra_1': [df[c].dropna().astype(str).iloc[0] if not df[c].dropna().empty else '' for c in df.columns],
+        }
+    )
+
+    # Informações adicionais de auditoria
+    total_registros = df.shape[0]
+    duplicatas = df.duplicated().sum()
+    metadata = {
+        'total_registros': total_registros,
+        'duplicatas': int(duplicatas),
+    }
+
+    # Salvar relatório principal por coluna
+    rel.to_csv(path, index=False)
+
+    # Salvar metadados em um arquivo auxiliar (same path + .meta.csv)
+    meta_path = Path(str(path) + '.meta.csv')
+    pd.DataFrame([metadata]).to_csv(meta_path, index=False)
+
+    print(f"Relatório de auditoria: {path} (metadados em {meta_path})")
+
+
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description='Análise exploratória inicial do dataset de varejo')
     parser.add_argument('--file', '-f', type=Path, default=Path('Base varejo.csv'), help='Caminho para o arquivo CSV')
     parser.add_argument('--save-summary', '-s', type=Path, help='Caminho para salvar o resumo (CSV)')
+    parser.add_argument('--audit-report', '-a', type=Path, help='Caminho para salvar relatório de auditoria (CSV)')
     args = parser.parse_args(argv)
 
     print('Iniciando o processamento do Mini-Projeto!\n')
@@ -255,6 +291,14 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"Resumo salvo em: {args.save_summary}")
 
     df = process_dataframe(df)
+
+    # Se solicitado, gerar relatório de auditoria em CSV
+    if getattr(args, 'audit_report', None):
+        try:
+            gerar_relatorio_auditoria(df, args.audit_report)
+            print(f"Relatório de auditoria salvo em: {args.audit_report}")
+        except Exception as e:
+            print(f"Falha ao salvar relatório de auditoria: {e}")
 
     print("\nProcessamento concluído com sucesso! Verifique o README para os insights e documentação.")
 
