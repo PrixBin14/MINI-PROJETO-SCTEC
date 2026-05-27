@@ -4,6 +4,7 @@
 **Turma:** Analise_de_Dados_T1
 
 ## Como executar este projeto
+
 1. Clone este repositório no seu computador local.
 2. Certifique-se de que os arquivos `Base Varejo.csv` e `Miniprojeto_Priscila_Analise_de_Dados_T1.py` estão na mesma pasta.
 3. Abra o terminal no VsCode e instale a dependência obrigatória com o comando `pip install pandas numpy`.
@@ -31,6 +32,7 @@ Comportamento do script:
 - Imprime no terminal: número de registros/colunas, tipos de dados e um resumo por coluna (nulos, unicos e estatísticas numéricas quando houver).
 
 ## Observações técnicas
+
 - A função `carregar_csv` faz heurísticas para evitar leituras incorretas (por exemplo, quando o arquivo usa `;` como delimitador).
 - A função `resumo_basico` evita chamar `describe()` se não houver colunas numéricas, prevenindo erros.
 
@@ -68,12 +70,14 @@ python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base varejo.csv" -s resu
 Isso produz `resumo_colunas.csv` com a tabela de resumo por coluna que você pode abrir no Excel para inspeção manual.
 
 ## Reflexão Teórica: Pipeline de Dados e ETL
+
 A qualidade dos dados é o pilar de qualquer projeto de Business Intelligence. Neste miniprojeto, aplicamos os fundamentos de **ETL (Extract, Transform, Load)**:
 * **Extract (Extração):** A base original foi importada duplamente, primeiro via `csv.DictReader` para atestar o consumo de arquivos nativos de forma estruturada e em seguida com o `pandas` para eficiência de cálculo.
 * **Transform (Transformação):** Foi o foco do script. Tratamos vazios mascarados como "#N/D", alteramos a tipagem temporal de Strings para Datetime e validamos as regras de identificador.
 * **Load (Carga):** A base ao final do script se encontra perfeitamente limpa e em estado ótimo, servindo como uma fonte confiável para a camada de visualização de dados (Dashboards).
 
 ## Bloco de Conclusões e Principais Insights
+
 Através da Análise Exploratória (AED) com Pandas, identificamos:
 
 1. **Volume Expressivo de Duplicatas e "Sujeira":** A base apresentou linhas completamente redundantes e colunas vazias "fantasmas" geradas por delimitadores extras (`;;;;`) presentes no CSV nativo. Esse tratamento de sanitização diminuiu drasticamente os gargalos na base.
@@ -83,6 +87,7 @@ Através da Análise Exploratória (AED) com Pandas, identificamos:
 5. **Problema Remanescente (Dimensões):** A base original fornecida carece da coluna de Dimensões Físicas dos produtos, o que hoje impede a equipe de dados de construir uma modelagem logística refinada (cubagem e custo de frete por pacote).
 
 ## Testes rápidos
+
 - Execute `python3 test_smoke.py` para rodar um teste que usa dados de exemplo e valida a pipeline.
 
 ## Teste rápido: por que existe `test_smoke.py`?
@@ -101,3 +106,30 @@ python3 test_smoke.py
 ```
 
 Saída esperada: uma mensagem indicando uso dos dados de exemplo e `Smoke test passou`.
+
+---
+## Relatórios
+
+Como acessar os relatórios 
+
+- Gerar apenas o resumo por coluna:
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -s resumo_colunas.csv
+```
+
+- Gerar relatório de auditoria completo:
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -a relatorio_auditoria.csv
+```
+
+Após a execução os arquivos serão gravados no diretório atual (onde o script foi executado). O `relatorio_auditoria.csv` contém uma linha por coluna do dataset com as métricas; `relatorio_auditoria.csv.meta.csv` contém metadados (total de registros, duplicatas). Ambos podem ser abertos no Excel ou carregados em qualquer ferramenta de auditoria.
+
+Como interpretar rápido os arquivos
+
+- `num_nulos`: quantidade de valores ausentes após o processamento. Alta porcentagem indica campos problemáticos.
+- `num_unicos`: dá uma ideia da cardinalidade; colunas com cardinalidade baixa são boas candidatas a agrupar/segmentar.
+- `amostra_1`: um valor de exemplo para inspeção manual (verifica formato e consistência humana rápida).
+- Arquivo `.meta.csv`: fornece contexto operacional (quantidade de registros e se duplicatas foram removidas), útil para evidências de auditoria.
+

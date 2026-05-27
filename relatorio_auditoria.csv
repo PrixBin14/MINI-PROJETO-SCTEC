@@ -1,0 +1,13 @@
+coluna,tipo,num_nulos,num_unicos,amostra_1
+data,datetime64[ns],0,333,2019-02-01
+co_id,int64,0,18471,1000
+cl_id,int64,0,1000,534
+cl_genero,object,0,2,M
+cl_ec,int64,0,5,4
+cl_fhl,int64,0,5,1
+cl_seg,object,0,3,C
+pr_id,int64,0,229,67
+pr_cat,object,3228,6,BEBIDAS
+pr_nome,object,3228,117,REFRIGERANTE GUARANA
+prefixo_compra,object,0,1,CO
+num_compra_formatado,object,0,18471,CO-1000
