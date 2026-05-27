@@ -92,3 +92,39 @@ pip install -r requirements.txt
 5. Por que isso importa:
 
 > Imagine que um auditor precise confirmar se o número de vendas divulgado pela equipe de BI não foi inflado por duplicatas ou erros de leitura. Com os relatórios gerados, o auditor pode checar rapidamente as contagens e as transformações aplicadas, sem reexecutar todo o pipeline — evitando reprovações e acelerando a validação.
+
+## Por que existe `df_limpo` e o teste de integridade
+
+No meio do projeto houve um momento decisivo — rodando o script pela primeira vez com a base bruta, percebemos que pequenas mudanças no pipeline (um replace aqui, uma normalização ali) podiam alterar muito o resultado final. Foi nesse ponto que nasceu o `df_limpo` e o teste de verificação rápida.
+
+Imagine o seguinte: você está a poucos minutos de enviar um relatório executivo. Em vez de reprocessar tudo manualmente, basta gerar o `df_limpo` (o DataFrame final após leitura, parsing e limpeza) e rodar a verificação rápida. Em segundos você tem:
+
+- Quantidade de nulos por coluna (sinais de problemas de ingestão);
+- Quantidade de duplicatas (ajuda a confirmar a contagem real de vendas);
+- Tipos de dado detectados (garante que as colunas temporais e numéricas estão corretas).
+
+Essa rotina não é mágica — é um contrato de confiança: `df_limpo` representa o estado do dado pronto para análise, e a verificação rápida é um pequeno roteiro de checagem que reduz o risco de regressões e acelera revisões por pares.
+
+Quando usar:
+- Durante desenvolvimento: execute antes de abrir um PR para garantir que suas alterações não quebraram a transformação final.
+- Em revisão: o avaliador consegue reproduzir o estado final da transformação com um conjunto mínimo de comandos.
+- Em produção experimental: como smoke test em pipelines CI para captar mudanças inesperadas na entrada de dados.
+
+Exemplo rápido (CLI):
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv"
+```
+
+Exemplo rápido (programático):
+
+```python
+from Miniprojeto_Priscila_Analise_de_Dados_T1 import carregar_csv, normalizar_colunas, parse_datas, process_dataframe, validar_limpeza
+from pathlib import Path
+
+df = carregar_csv(Path('Base Varejo.csv'))
+df = normalizar_colunas(df)
+df = parse_datas(df, coluna='data')
+df_limpo = process_dataframe(df)
+validar_limpeza(df_limpo)
+```

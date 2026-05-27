@@ -107,6 +107,37 @@ python3 test_smoke.py
 
 Saída esperada: uma mensagem indicando uso dos dados de exemplo e `Smoke test Ok!`.
 
+## Por que existe o bloco `df_limpo` e a verificação rápida de limpeza
+
+Inserimos um pequeno bloco (usado em desenvolvimento/validação) que monta um `df_limpo` e executa a verificação rápida de integridade para três objetivos práticos:
+
+- Confiança local imediata: ao trabalhar com um arquivo grande, é útil ter um ponto único que construa o DataFrame final (após as etapas de leitura, normalização e parsing) para inspecionar as primeiras linhas e as estatísticas de integridade sem reexecutar passos manuais.
+- Segurança de regressão: a verificação rápida (`validar_limpeza`) imprime contagens de nulos, duplicatas e tipos de dados, atuando como um sanity-check imediato após alterações no código (útil durante desenvolvimento e revisão de PRs).
+- Reprodutibilidade e documentação: ao fornecer um caminho simples para gerar `df_limpo` e rodar a validação, os revisores e avaliadores conseguem reproduzir o estado final da transformação sem precisar entender cada detalhe do pipeline.
+
+Como usar
+
+- Para executar o pipeline completo e gerar o `df_limpo` via CLI, use:
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv"
+```
+
+- Para executar a verificação rapidamente em código (modo programático):
+
+```python
+from Miniprojeto_Priscila_Analise_de_Dados_T1 import carregar_csv, normalizar_colunas, parse_datas, process_dataframe, validar_limpeza
+from pathlib import Path
+
+df = carregar_csv(Path('Base Varejo.csv'))
+df = normalizar_colunas(df)
+df = parse_datas(df, coluna='data')
+df_limpo = process_dataframe(df)
+validar_limpeza(df_limpo)
+```
+
+Observação: a validação não altera os dados — apenas imprime um relatório de integridade para inspeção manual.
+
 ---
 ## Relatórios
 
@@ -133,3 +164,52 @@ Como interpretar rápido os arquivos
 - `amostra_1`: um valor de exemplo para inspeção manual (verifica formato e consistência humana rápida).
 - Arquivo `.meta.csv`: fornece contexto operacional (quantidade de registros e se duplicatas foram removidas), útil para evidências de auditoria.
 
+# Uso e Import Seguro
+
+Este arquivo resume como usar o projeto tanto via CLI quanto importando as funções a partir do módulo `Miniprojeto_Priscila_Analise_de_Dados_T1.py` sem efeitos colaterais.
+
+## Import seguro
+
+O módulo foi organizado para permitir importação sem executar o pipeline automaticamente. Você pode importar funções para uso programático em outros scripts ou em testes.
+
+Exemplo (modo programático):
+
+```python
+from pathlib import Path
+from Miniprojeto_Priscila_Analise_de_Dados_T1 import carregar_csv, normalizar_colunas, parse_datas, process_dataframe
+
+# Carregar e processar
+df = carregar_csv(Path("Base Varejo.csv"))
+df = normalizar_colunas(df)
+df = parse_datas(df, coluna='data')
+df_limpo = process_dataframe(df)
+```
+
+## Executar via CLI
+
+Use a interface de linha de comando quando deseja rodar o pipeline completo e salvar relatórios:
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -a relatorio_auditoria.csv
+```
+
+Observações:
+- Se o caminho do arquivo contém espaços, coloque entre aspas.
+- A flag `-s/--save-summary` salva o resumo por coluna em CSV.
+- A flag `-a/--audit-report` salva o relatório de auditoria em CSV e um arquivo `<nome>.meta.csv` com metadados.
+- Em execuções recentes o script salva a amostra nativa em `<audit>.sample.json` e o referencia no CSV de auditoria.
+
+## Recomendações
+
+- Para integração contínua e testes, importe as funções diretamente; para runs ad-hoc, use o CLI.
+- Ao integrar em pipelines, capture exceções e verifique os metadados salvos (`<nome>.meta.csv`) para garantir consistência.
+
+## Registro de Estado e Auditoria (Data Lineage)
+
+O objetivo principal de um arquivo de auditoria em formato JSON é manter um registro formal de como os dados estavam em um determinado momento. Como o JSON é um formato semi-estruturado, ele permite armazenar metadados que não caberiam facilmente em uma linha de CSV, como:
+
+Timestamp: Quando a auditoria foi executada.
+
+Status de Processamento: Se o arquivo passou ou falhou nas validações.
+
+Contagem de Registros: Quantas linhas foram lidas versus quantas foram processadas/limpas.

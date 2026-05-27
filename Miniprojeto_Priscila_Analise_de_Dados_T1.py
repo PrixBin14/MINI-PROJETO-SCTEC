@@ -9,6 +9,7 @@ import csv
 import numpy as np
 import json
 
+from pathlib import Path
 
 def dados_exemplo() -> pd.DataFrame:
     """Retorna um DataFrame de exemplo usado como fallback quando o arquivo não existe
@@ -315,6 +316,12 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     df = process_dataframe(df)
 
+    # Relatório rápido de integridade após processamento (chamada segura)
+    try:
+        validar_limpeza(df)
+    except Exception as e:
+        print(f"Aviso: falha ao executar validar_limpeza: {e}")
+
     # Se solicitado, gerar relatório de auditoria em CSV
     if getattr(args, 'audit_report', None):
         try:
@@ -325,8 +332,16 @@ def main(argv: Optional[List[str]] = None) -> int:
 
     print("\nProcessamento concluído com sucesso! Verifique o README para os insights e documentação.")
 
-    return 0
-
+# Verificação rápida de limpeza
+def validar_limpeza(df):
+    print("--- Relatório de Integridade ---")
+    print(f"Linhas vazias por coluna:\n{df.isnull().sum()}")
+    print(f"Total de linhas duplicadas: {df.duplicated().sum()}")
+    print(f"Tipos de dados:\n{df.dtypes}")
+    print("--- Relatório de Integridade ---")
+    print(f"Linhas vazias por coluna:\n{df.isnull().sum()}")
+    print(f"Total de linhas duplicadas: {df.duplicated().sum()}")
+    print(f"Tipos de dados:\n{df.dtypes}")
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    main()
