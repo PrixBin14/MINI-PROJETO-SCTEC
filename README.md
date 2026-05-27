@@ -1,7 +1,7 @@
 # A Jornada dos Dados: Desvendando o Caos no Varejo
 
-**Estudante:** Priscila | **Turma:** Analise_de_Dados_T1  
-**Tecnologias:** Python, Pandas, SQL Foundations, Git & VsCode
+**Estudante:** Priscila C. Ferreira 
+**Turma:** Analise_de_Dados_T1  
 
 ---
 

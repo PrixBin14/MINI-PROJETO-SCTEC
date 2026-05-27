@@ -21,4 +21,4 @@ def test_pipeline_with_example():
 
 if __name__ == '__main__':
     test_pipeline_with_example()
-    print('Smoke test passou')
+    print('Smoke test Ok!')

@@ -1,6 +1,6 @@
 # Projeto Avaliativo de Análise de Dados - Varejo
 
-**Aluna:** Priscila  
+**Aluna:** Priscila C. Ferreira
 **Turma:** Analise_de_Dados_T1
 
 ## Como executar este projeto
@@ -92,7 +92,7 @@ Através da Análise Exploratória (AED) com Pandas, identificamos:
 
 ## Teste rápido: por que existe `test_smoke.py`?
 
-Incluímos o arquivo `test_smoke.py` como um teste de *smoke* (sanidade) por várias razões práticas:
+Incluímos o arquivo `test_smoke.py` como um teste de *smoke* por várias razões práticas:
 
 - Verificação rápida: ele permite executar a pipeline mínima do script sem precisar do dataset completo. Útil quando o CSV original não está disponível.
 - Segurança de importação: o script principal foi refatorado para não executar código ao ser importado. O `test_smoke.py` importa as funções e valida que a pipeline (leitura → normalização → parsing → resumo) funciona apenas com os dados de exemplo.
@@ -105,7 +105,7 @@ Como usar:
 python3 test_smoke.py
 ```
 
-Saída esperada: uma mensagem indicando uso dos dados de exemplo e `Smoke test passou`.
+Saída esperada: uma mensagem indicando uso dos dados de exemplo e `Smoke test Ok!`.
 
 ---
 ## Relatórios
