@@ -13,7 +13,19 @@ Ao abrir o arquivo pela primeira vez, o cenário era caótico: delimitadores des
 
 Este projeto documenta a minha jornada técnica para resgatar, limpar e transformar esse deserto de dados brutos em um oásis de insights estratégicos e acionáveis.
 
----
+## Sumário
+
+- [O Cenário: O Desafio da Base Oculta](#o-cenario-o-desafio-da-base-oculta)
+- [O Resgate Técnico (Passo a Passo do Pipeline)](#o-resgate-tecnico-passo-a-passo-do-pipeline)
+	- [1. A Extração e Reconhecimento do Terreno](#1-a-extracao-e-reconhecimento-do-terreno)
+	- [2. A Purificação da Base (Tratamento de Anomalias)](#2-a-purificacao-da-base-tratamento-de-anomalias)
+	- [2.1 Dados duplicados](#21-dados-duplicados)
+- [Descobertas e Insights de Negócio](#descobertas-e-insights-de-negocio)
+- [Problemas Remanescentes e Próximos Passos](#problemas-remanescentes-e-proximos-passos)
+- [Como Executar e Validar o Projeto](#como-executar-e-validar-o-projeto)
+- [Relatórios gerados](#relatorios-gerados)
+- [Por que existe `df_limpo` e o teste de integridade](#por-que-existe-df_limpo-e-o-teste-de-integridade)
+
 
 ## O Resgate Técnico (Passo a Passo do Pipeline)
 
@@ -34,7 +46,7 @@ O primeiro desafio foi a leitura precisa do arquivo. Para garantir a conformidad
 ### 2.1 Dados duplicados
 
 Analisando o arquivo foram identificados produtos que possuem o mesmo nome, mas códigos (`PR_ID`) diferentes.
-Processei os dados do seu arquivo CSV, para identificar produtos "duplicados":
+Procesei os dados do seu arquivo CSV para identificar produtos "duplicados":
 
 * **Resumo da Análise Total de produtos nessa situação:** Encontrei 4 nomes de produtos que estão duplicados com IDs diferentes.
 * **Total de códigos envolvidos:** Esses 4 nomes se dividem em 8 códigos distintos.
@@ -138,11 +150,11 @@ Imagine o seguinte: você está a poucos minutos de enviar um relatório executi
 * Quantidade de duplicatas (ajuda a confirmar a contagem real de vendas);
 * Tipos de dado detectados (garante que as colunas temporais e numéricas estão corretas).
 
-* O arquivo original Base Varejo.csv possui *830.000* linhas (incluindo o cabeçalho).
+* O arquivo original `Base Varejo.csv` possui *830.000* linhas (incluindo o cabeçalho).
 
 - Após realizar o processo de limpeza e remover as linhas duplicadas, o novo arquivo gerado (df_limpo.csv) ficou com *733.447* linhas.
 
-Essa rotina não é mágica — é um contrato de confiança: `df_limpo` representa o estado do dado pronto para análise, e a verificação rápida é um pequeno roteiro de checagem que reduz o risco de regressões e acelera revisões por pares.
+Essa rotina não é mágica — é um contrato de confiança: `df_limpo` representa o estado do dado pronto para análise, e a verificação rápida reduz o risco de regressões e acelera revisões por pares.
 
 **Quando usar:**
 * Durante desenvolvimento: execute antes de abrir um PR para garantir que suas alterações não quebraram a transformação final.

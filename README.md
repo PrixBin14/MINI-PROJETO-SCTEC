@@ -71,6 +71,8 @@ Durante a fase de Transformação, o script resolve problemas crônicos de quali
 
 - **Identificador de Compra (CO_ID):** Valida e cria chaves formatadas no padrão `CO-XXXX`.
 
+> Para uma descrição narrativa e exemplos reais sobre duplicatas detectadas, veja a seção "### 2.1 Dados duplicados" em `README_Storytelling.md`.
+
 ---
 
 ## Conclusões, Insights e Análises Geradas
