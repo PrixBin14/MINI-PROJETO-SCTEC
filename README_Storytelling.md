@@ -77,7 +77,8 @@ Linha 40: 01/02/2019;1000;534;M;4;1;C;4;ALIMENTOS;ABACAXI
 
 O mesmo acontece no mesmo cupom para os itens Azeite, Banana, Refrigerante Limão e Bife de Coxão Mole.
 
-Por esse motivo apliquei o comando de *remoção de duplicadas* antes de prosseguir com as análises.
+- Por esse motivo apliquei o comando de *remoção de duplicadas* antes de prosseguir com as análises.
+  
 ---
 
 ### Descobertas e Insights de Negócio (O Clímax da Análise)
