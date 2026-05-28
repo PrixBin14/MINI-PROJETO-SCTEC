@@ -1,130 +1,108 @@
-# A Jornada dos Dados: Desvendando o Caos no Varejo
+Projeto Avaliativo de Análise de Dados - Varejo
 
-**Estudante:** Priscila C. Ferreira 
-**Turma:** Analise_de_Dados_T1  
+**Aluna:** Priscila C. Ferreira  
+**Turma:** Analise_de_Dados_T1
 
----
-
-## O Cenário: O Desafio da Base Oculta
-
-Imagine-se assumindo o papel de Analista de Dados em uma grande corporação de varejo. À sua mesa chega uma missão crítica: a diretoria precisa lançar uma nova campanha de marketing segmentada e otimizar a cadeia logística. O motor para essa tomada de decisão existe, mas está trancado em um arquivo bruto chamado `Base Varejo.csv`. 
-
-Ao abrir o arquivo pela primeira vez, o cenário era caótico: delimitadores desajustados sabotando a leitura, registros duplicados inflando os números reais de faturamento, datas registradas como meros textos impossíveis de ordenar cronologicamente, e o pior: lacunas ocultas sob a sigla `#N/D`. 
-
-Este projeto documenta a minha jornada técnica para resgatar, limpar e transformar esse deserto de dados brutos em um oásis de insights estratégicos e acionáveis.
+Este projeto consiste em uma pipeline automatizada de **ETL (Extração, Transformação e Carga)** e Análise Exploratória de Dados (AED) para uma base de dados de varejo, utilizando Python e Pandas.
 
 ---
 
-## O Resgate Técnico (Passo a Passo do Pipeline)
+## Como Executar o Projeto
 
-Para que nenhuma informação fosse corrompida, montei uma estrutura de Sprints e tratamento de dados dividida em etapas rigorosas de engenharia:
-
-### 1. A Extração e Reconhecimento do Terreno
-
-O primeiro desafio foi a leitura precisa do arquivo. Para garantir a conformidade nativa, utilizei estruturas como `csv.DictReader` combinadas com o `csv.Sniffer` para que o script mapeasse autonomamente se o delimitador era vírgula ou ponto-e-vírgula. Com o terreno preparado, o Pandas assumiu o controle revelando o tamanho real do desafio (linhas, colunas e tipos primitivos de dados).
-
-### 2. A Purificação da Base (Tratamento de Anomalias)
-
-* **Eliminação de Ruídos:** Linhas idênticas e redundantes foram removidas para evitar distorções estatísticas.
-* **Máscaras Reveladas:** Valores inválidos como `#N/D` foram convertidos em NaNs reais para tratamento adequado.
-* **Lógica de Categorização:** Utilizando condicionais lógicas estruturadas, produtos sem classificação foram rotulados como `"Sem Categoria"`, impedindo a perda de histórico financeiro dessas transações.
-* **A Linha do Tempo Ajustada:** Strings confusas de datas foram convertidas para objetos `datetime`, permitindo análises de tendências temporais.
-* **Regra de Negócio Implementada:** O ID interno de compras foi decodificado e padronizado sob o prefixo corporativo `CO-` para indexação futura.
-
----
-
-### Descobertas e Insights de Negócio (O Clímax da Análise)
-
-Após estabilizar a base, os dados finalmente começaram a contar suas histórias através de agrupamentos e estatísticas descritivas:
-
-* **O Perfil Familiar do Consumidor (`CL_FHL`):** A análise estatística descritiva completa revelou a distribuição exata do número de filhos dos clientes. Parâmetros como a *Média* e a *Mediana* traçam com precisão a estrutura familiar predominante do público-alvo, permitindo que a equipe de marketing crie campanhas personalizadas (ex: promoções de Dia das Crianças ou pacotes familiares).
-* **Força Demográfica (`CL_GENERO`):** O cruzamento e agrupamento revelaram qual gênero lidera o volume total de transações e a quantidade de produtos movimentados, direcionando o orçamento de tráfego pago para o público de maior conversão.
-* **Preferências por Estado Civil (`CL_EC`):** Mapeamos as Top 5 categorias de produtos mais consumidas cruzadas com o estado civil dos compradores. Descobrimos padrões comportamentais distintos que alteram as prioridades de estoque da loja.
-
----
-
-## Problemas Remanescentes e Próximos Passos
-
-Nenhuma jornada de dados termina na primeira limpeza. Identifiquei gargalos que devem ser tratados em Sprints futuras:
-1. **Falha Originária no PDV:** O alto volume de produtos categorizados originalmente como `#N/D` sinaliza um problema estrutural no cadastro de produtos ou nos caixas físicos. A engenharia de software foi alertada.
-2. **Ausência das Dimensões Físicas:** A falta de dados sobre altura, largura e peso dos itens impede que o time de logística calcule a cubagem exata de frete, limitando nossa automação logística atual.
-
----
-
-## Como Executar e Validar o Projeto
-
-O projeto foi totalmente projetado para ser reprodutível no **VsCode** ou **Google Colab**.
-
-### Pré-requisitos
-
-Instale as bibliotecas necessárias rodando no terminal:
-```bash
-pip install -r requirements.txt 
-```  
-
-## Relatórios gerados
-
-1. Por que geramos relatórios?
-
-- Auditoria e Transparência: para que um time externo (auditores, compliance) possa verificar o histórico e as decisões de limpeza sem reprocessar a base.
-- Rastreabilidade: documentar pre/post transformações facilita replicação e investigação de regressões.
-- Entregáveis de Negócio: resumos rápidos permitem que as áreas (Marketing, Logística) consumam insights sem aguardar dashboards completos.
-- Reprodutibilidade: salvar resumos e relatórios permite reproduzir resultados, comparar versões e documentar quais transformações foram aplicadas.
-- Entrega de Valor Rápida: um CSV de resumo e um relatório de auditoria dão às áreas de negócio (Marketing, Logística, BI) entregáveis imediatamente utilizáveis.
-
-2. Quais relatórios o script pode gerar?
-
-- Resumo por coluna (CSV): use a flag `--save-summary / -s` para exportar a tabela gerada por `resumo_basico()`.
-- Relatório de auditoria (CSV + .meta.csv): use `--audit-report / -a` para gerar um CSV com métricas por coluna (tipo, nulos, únicos, exemplo) e um arquivo auxiliar de metadados (`<nome>.meta.csv`) com informações como total de registros e duplicatas detectadas.
-
-3. Quais relatórios e como gerá-los?
-
-- Resumo por coluna (CSV): `--save-summary / -s`
-	- Exemplo: `python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -s resumo_colunas.csv`
-- Relatório de auditoria (CSV + meta): `--audit-report / -a`
-	- Exemplo: `python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -a relatorio_auditoria.csv`
-
-4. O que contém o relatório de auditoria?
-
-- Por coluna: nome, tipo, número de nulos, número de valores únicos e um exemplo de valor (`amostra_1`).
-- Arquivo meta (`<nome>.meta.csv`) com metadados do processamento: total de registros e duplicatas removidas.
-
-5. Por que isso importa:
-
-> Imagine que um auditor precise confirmar se o número de vendas divulgado pela equipe de BI não foi inflado por duplicatas ou erros de leitura. Com os relatórios gerados, o auditor pode checar rapidamente as contagens e as transformações aplicadas, sem reexecutar todo o pipeline — evitando reprovações e acelerando a validação.
-
-## Por que existe `df_limpo` e o teste de integridade
-
-No meio do projeto houve um momento decisivo — rodando o script pela primeira vez com a base bruta, percebemos que pequenas mudanças no pipeline (um replace aqui, uma normalização ali) podiam alterar muito o resultado final. Foi nesse ponto que nasceu o `df_limpo` e o teste de verificação rápida.
-
-Imagine o seguinte: você está a poucos minutos de enviar um relatório executivo. Em vez de reprocessar tudo manualmente, basta gerar o `df_limpo` (o DataFrame final após leitura, parsing e limpeza) e rodar a verificação rápida. Em segundos você tem:
-
-- Quantidade de nulos por coluna (sinais de problemas de ingestão);
-- Quantidade de duplicatas (ajuda a confirmar a contagem real de vendas);
-- Tipos de dado detectados (garante que as colunas temporais e numéricas estão corretas).
-
-Essa rotina não é mágica — é um contrato de confiança: `df_limpo` representa o estado do dado pronto para análise, e a verificação rápida é um pequeno roteiro de checagem que reduz o risco de regressões e acelera revisões por pares.
-
-Quando usar:
-- Durante desenvolvimento: execute antes de abrir um PR para garantir que suas alterações não quebraram a transformação final.
-- Em revisão: o avaliador consegue reproduzir o estado final da transformação com um conjunto mínimo de comandos.
-- Em produção experimental: como smoke test em pipelines CI para captar mudanças inesperadas na entrada de dados.
-
-Exemplo rápido (CLI):
+### 1. Pré-requisitos
+Certifique-se de ter o Python instalado e as dependências obrigatórias configuradas. No terminal, execute:
 
 ```bash
-python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv"
+pip install pandas numpy
 ```
 
-Exemplo rápido (programático):
+### 2. Execução Padrão
+Garanta que o arquivo `Base Varejo.csv` e o script `Miniprojeto_Priscila_Analise_de_Dados_T1.py` estejam na mesma pasta. Rode o comando:
 
-```python
-from Miniprojeto_Priscila_Analise_de_Dados_T1 import carregar_csv, normalizar_colunas, parse_datas, process_dataframe, validar_limpeza
-from pathlib import Path
-
-df = carregar_csv(Path('Base Varejo.csv'))
-df = normalizar_colunas(df)
-df = parse_datas(df, coluna='data')
-df_limpo = process_dataframe(df)
-validar_limpeza(df_limpo)
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py
 ```
+
+### 3. Opções de Linha de Comando (CLI)
+O script aceita argumentos para personalizar a execução:
+
+- `--file / -f`: Caminho personalizado para o CSV (Padrão: Base varejo.csv).
+
+- `--save-summary / -s`: Salva o resumo estatístico das colunas em formato CSV.
+
+- `--audit-report / -a`: Gera um relatório de auditoria completo em CSV.
+
+#### Exemplo completo com salvamento de relatórios
+
+```bash
+python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv" -s resumo_colunas.csv -a relatorio_auditoria.csv
+```
+
+## Comportamento do Script e Pipeline de ETL
+
+O projeto foi desenhado sob o conceito de Import Seguro, permitindo que suas funções sejam importadas por outros scripts sem executar a pipeline automaticamente. Quando executado diretamente, o comportamento segue estas etapas:
+
+### Extract (Extração)
+Detecta automaticamente o delimitador do CSV (`,`, `;`, `\t`, `|`). Faz uma validação estruturada inicial usando `csv.DictReader` e, em seguida, carrega os dados com `pandas`, alternando entre `utf-8` e `latin1` para evitar erros de encoding. Se o arquivo não existir, ele carrega um DataFrame de exemplo como fallback.
+
+### Transform (Transformação)
+Aplica as regras de saneamento, padronização e conversão de tipos (detalhes na seção abaixo).
+
+### Load (Carga/Saída)
+Exibe no terminal os insights gerados, roda um validador de integridade (`validar_limpeza`) e exporta os relatórios solicitados via CLI.
+
+---
+
+## Dados Tratados e Regras de Negócio
+
+Durante a fase de Transformação, o script resolve problemas crônicos de qualidade de dados da base bruta:
+
+- **Padronização de Colunas:** Todos os nomes de colunas são convertidos para letras minúsculas e espaços são substituídos por underscores (_).
+
+- **Remoção de Redundâncias:** Linhas duplicadas exatas são eliminadas e colunas completamente vazias (geradas por delimitadores extras como `;;;;`) são descartadas.
+
+- **Tratamento de Máscaras de Erro:** Textos como `#N/D` são convertidos para nulos reais (`NaN`).
+
+- **Categorias Ausentes (PR_CAT):** Valores vazios ou nulos são preenchidos com o texto "Sem Categoria", evitando a perda de rastreabilidade da transação monetária.
+
+- **Dimensões Físicas (DIMENSOES):** Caso a coluna não exista, o script injeta dados simulados para demonstrar a esteira logística. Valores nulos são preenchidos com `0x0x0`.
+
+- **Tratamento Temporal (DATA):** Converte strings de data no formato `dd/mm/yyyy` para o tipo nativo `datetime`.
+
+- **Identificador de Compra (CO_ID):** Valida e cria chaves formatadas no padrão `CO-XXXX`.
+
+---
+
+## Conclusões, Insights e Análises Geradas
+
+O script calcula e exibe no terminal métricas valiosas para o negócio:
+
+- **Estatísticas Descritivas (Número de Filhos - CL_FHL):** Calcula Contagem, Média, Mediana, Moda, Desvio Padrão, Mínimo, Máximo e Quartis (25% e 75%). Essa distribuição ajuda a mapear o tamanho familiar do consumidor para criar campanhas direcionadas (ex: "Leve 3, Pague 2").
+
+- **Padrões de Agrupamento:**
+
+	- Produtos por Gênero (CL_GENERO): Revela o volume de transações por demografia, útil para estratégias de marketing digital.
+
+	- Top 5 Categorias por Estado Civil (CL_EC): Identifica quais categorias performam melhor de acordo com o estado civil do cliente.
+
+- **Alerta de Engenharia:** A alta taxa de valores vazios em categorias apontou uma provável falha de integração nos sistemas de PDV (Frente de Caixa), e a ausência de dados reais de dimensões físicas limita o cálculo de frete e cubagem.
+
+---
+
+##  Ferramentas de Validação e Auditoria
+
+### Teste de Fumaça (test_smoke.py)
+Para garantir a estabilidade do código, foi incluído um script de teste rápido. Ele executa a pipeline inteira utilizando apenas os dados internos de exemplo, sem precisar do arquivo CSV real. Ideal para fluxos de Integração Contínua (CI/CD).
+
+```bash
+python3 test_smoke.py
+```
+
+Saída esperada: `Smoke test Ok!`
+
+### Arquivos de Auditoria
+Ao utilizar a flag `-a`, o projeto gera dois arquivos na pasta local:
+
+- `relatorio_auditoria.csv`: Contém métricas por coluna (`num_nulos`, `num_unicos` e uma `amostra_1` do dado real) além de um dump em JSON das primeiras linhas para histórico de linhagem de dados (Data Lineage).
+
+- `relatorio_auditoria.csv.meta.csv`: Um arquivo complementar que armazena metadados rápidos do processo (total de registros processados e quantidade de duplicatas removidas).
