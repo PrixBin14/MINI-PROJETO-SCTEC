@@ -31,6 +31,41 @@ O primeiro desafio foi a leitura precisa do arquivo. Para garantir a conformidad
 * **A Linha do Tempo Ajustada:** Strings confusas de datas foram convertidas para objetos `datetime`, permitindo análises de tendências temporais.
 * **Regra de Negócio Implementada:** O ID interno de compras foi decodificado e padronizado sob o prefixo corporativo `CO-` para indexação futura.
 
+### 2.1 Dados duplicados
+
+Analisando o arquivo foram identificados produtos que possuem o mesmo nome, mas códigos (`PR_ID`) diferentes.
+Processei os dados do seu arquivo CSV, para identificar produtos "duplicados":
+
+* **Resumo da Análise Total de produtos nessa situação:** Encontrei 4 nomes de produtos que estão duplicados com IDs diferentes.
+* **Total de códigos envolvidos:** Esses 4 nomes se dividem em 8 códigos distintos.
+
+* **Quais são esses produtos e seus códigos:** 
+Categoria (`PR_CAT`).  Nome do Produto (`PR_NOME`).	Códigos Encontrados (`PR_ID`)
+ALIMENTOS				MACARRAO						11 e 12
+ALIMENTOS				BISCOITO						141 e 142
+ALIMENTOS				REQUEIJAO						207 e 208
+LIMPEZA					SABÃO EM PÓ						112 e 220
+
+* **Por que isso costuma acontecer no varejo:** 
+Esse cenário geralmente ocorre por três motivos: 
+* Variação de Tamanho/Peso: O produto tem o mesmo nome, mas um código é para a versão de 500g e o outro para a de 1kg (muito comum em Macarrão e Sabão em Pó).
+* Marcas Diferentes: O sistema cadastrou apenas o nome genérico ("Biscoito"), mas separou os códigos para marcas ou sabores diferentes.
+* Erro de Cadastro: Duplicidade real no banco de dados onde o mesmo item recebeu dois códigos por falha operacional.
+
+* **Inconsistência Detectada: Linhas Duplicadas**
+O único — e principal — problema identificado na base foi um volume massivo de linhas idênticas duplicadas.
+Total de linhas afetadas: Existem 96.553 linhas repetidas na base.
+* **O problema:** Dentro do mesmo cupom (`CO_ID`), o exato mesmo produto (`PR_ID`) aparece listado mais de uma vez em linhas totalmente separadas e idênticas, em vez de estar consolidado em uma coluna de "Quantidade".
+
+* **Exemplo real extraído da sua base:**
+No cupom 1000, o cliente comprou o produto 4 (ALIMENTOS - ABACAXI). Em vez de o sistema registrar que ele levou 2 unidades, o arquivo gerou duas linhas idênticas para a mesma compra:
+
+Linha 3:  01/02/2019;1000;534;M;4;1;C;4;ALIMENTOS;ABACAXI
+Linha 40: 01/02/2019;1000;534;M;4;1;C;4;ALIMENTOS;ABACAXI
+
+O mesmo acontece no mesmo cupom para os itens Azeite, Banana, Refrigerante Limão e Bife de Coxão Mole.
+
+Por esse motivo apliquei o comando de *remoção de duplicadas* antes de prosseguir com as análises.
 ---
 
 ### Descobertas e Insights de Negócio (O Clímax da Análise)
@@ -128,3 +163,5 @@ df = parse_datas(df, coluna='data')
 df_limpo = process_dataframe(df)
 validar_limpeza(df_limpo)
 ```
+
+THE END ! 

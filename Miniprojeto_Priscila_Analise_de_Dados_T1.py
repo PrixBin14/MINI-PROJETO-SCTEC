@@ -334,10 +334,12 @@ def main(argv: Optional[List[str]] = None) -> int:
 
 # Verificação rápida de limpeza
 def validar_limpeza(df):
+    
     print("--- Relatório de Integridade ---")
     print(f"Linhas vazias por coluna:\n{df.isnull().sum()}")
     print(f"Total de linhas duplicadas: {df.duplicated().sum()}")
     print(f"Tipos de dados:\n{df.dtypes}")
+
     print("--- Relatório de Integridade ---")
     print(f"Linhas vazias por coluna:\n{df.isnull().sum()}")
     print(f"Total de linhas duplicadas: {df.duplicated().sum()}")
