@@ -134,18 +134,22 @@ No meio do projeto houve um momento decisivo — rodando o script pela primeira 
 
 Imagine o seguinte: você está a poucos minutos de enviar um relatório executivo. Em vez de reprocessar tudo manualmente, basta gerar o `df_limpo` (o DataFrame final após leitura, parsing e limpeza) e rodar a verificação rápida. Em segundos você tem:
 
-- Quantidade de nulos por coluna (sinais de problemas de ingestão);
-- Quantidade de duplicatas (ajuda a confirmar a contagem real de vendas);
-- Tipos de dado detectados (garante que as colunas temporais e numéricas estão corretas).
+* Quantidade de nulos por coluna (sinais de problemas de ingestão);
+* Quantidade de duplicatas (ajuda a confirmar a contagem real de vendas);
+* Tipos de dado detectados (garante que as colunas temporais e numéricas estão corretas).
+
+* O arquivo original Base Varejo.csv possui *830.000* linhas (incluindo o cabeçalho).
+
+- Após realizar o processo de limpeza e remover as linhas duplicadas, o novo arquivo gerado (df_limpo.csv) ficou com *733.447* linhas.
 
 Essa rotina não é mágica — é um contrato de confiança: `df_limpo` representa o estado do dado pronto para análise, e a verificação rápida é um pequeno roteiro de checagem que reduz o risco de regressões e acelera revisões por pares.
 
-Quando usar:
-- Durante desenvolvimento: execute antes de abrir um PR para garantir que suas alterações não quebraram a transformação final.
-- Em revisão: o avaliador consegue reproduzir o estado final da transformação com um conjunto mínimo de comandos.
-- Em produção experimental: como smoke test em pipelines CI para captar mudanças inesperadas na entrada de dados.
+**Quando usar:**
+* Durante desenvolvimento: execute antes de abrir um PR para garantir que suas alterações não quebraram a transformação final.
+* Em revisão: o avaliador consegue reproduzir o estado final da transformação com um conjunto mínimo de comandos.
+* Em produção experimental: como smoke test em pipelines CI para captar mudanças inesperadas na entrada de dados.
 
-Exemplo rápido (CLI):
+**Exemplo rápido (CLI):**
 
 ```bash
 python3 Miniprojeto_Priscila_Analise_de_Dados_T1.py -f "Base Varejo.csv"
