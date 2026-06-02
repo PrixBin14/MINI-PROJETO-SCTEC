@@ -130,7 +130,6 @@ def resumo_basico(df: pd.DataFrame) -> pd.DataFrame:
     estat = numericos.describe().T
     if not estat.empty:
         estat = estat.rename(columns=lambda x: f'numeric_{x}')
-        cols = [c for c in estat.columns if c.startswith('count') or c.startswith('mean') or c.startswith('std') or c in estat.columns]
         resumo = resumo.merge(estat, left_on='coluna', right_index=True, how='left')
     return resumo
 
